@@ -1,6 +1,7 @@
 STARTGEOM
 H 1.0 1.0 1.0
 O 0.0 0.0 0.0
+H 0.0 0.0 0.0
 ENDGEOM
 
 #c2v, cs, c1
