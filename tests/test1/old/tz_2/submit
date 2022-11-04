@@ -1,4 +1,3 @@
-(cd 00000/ && sbatch ZMAT.sh)
 (cd 00001/ && sbatch ZMAT.sh)
 (cd 00002/ && sbatch ZMAT.sh)
 (cd 00003/ && sbatch ZMAT.sh)
@@ -67,3 +66,4 @@
 (cd 00066/ && sbatch ZMAT.sh)
 (cd 00067/ && sbatch ZMAT.sh)
 (cd 00068/ && sbatch ZMAT.sh)
+(cd 00069/ && sbatch ZMAT.sh)

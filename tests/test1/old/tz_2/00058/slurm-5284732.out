@@ -1,0 +1,10 @@
+ 
+Working directory   = /home/mdavis/xqpgen/tests/test1/tz/00058
+Scratch directory   = //scratch/mdavis/cfour_2022-11-04_09:26:58_00058
+Default input  file = ZMAT
+Default output file = output.dat
+CFOUR executable    = /home/qc/cfour_v2.1_intel_2017_eland2/bin/xcfour
+ 
+Running threaded CFOUR on node20 with 1 threads
+ 
+OMP: Info #277: omp_set_nested routine deprecated, please use omp_set_max_active_levels instead.

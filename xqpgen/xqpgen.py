@@ -1,22 +1,28 @@
 """Main module."""
 import qff_helper.qff_helper as qff_helper
-import os, io
+import os, io, stat
 
 # TODO implement psi4 options
-# TODO implement CLI
 # TODO clean up crufty code
-#TODO chmod submit
 
 # then, it should be usable and pretty extensible :)
 
 
 class Molecule:
-    def __init__(self, mol_name, point_group):
+    def __init__(self, mol_name):
         """Setup stuff for now"""
+        # TODO temp
         self.mol_name = mol_name
-        self.point_group = point_group
-
-    mol_name = "sdfsd"
+        if mol_name == "h2o":
+            self.point_group = "c2v"
+            self.atoms = ["H", "O", "H"]
+        elif mol_name == "co":
+            self.point_group = "c2v"
+            self.atoms = ["C", "O"]
+        elif mol_name == "h2co":
+            self.atoms = ["O", "C", "H", "H"]
+        else:
+            self.point_group = "c1"
 
 
 psi4_template = """dsfsds"""
@@ -35,13 +41,16 @@ def points_driver(cmd_line, **kwargs):
     """Main control function"""
     if cmd_line:
         # parse command line arguments and run program
-        kwargs = parse_cli(kwargs)
+        kwargs = parse_cli(**kwargs)
     else:
         kwargs = parse_input(kwargs["input_file"])
+    # TODO this is dumb but should work for CLI and input, fix later
+    mol = Molecule(kwargs["mol_name"])
+    kwargs["atoms"] = mol.atoms
+    atoms = kwargs["atoms"]
     kwargs["theories"] = set_method_dictionaries(**kwargs)
 
     # TODO consider moving
-    kwargs["ref"] = "rohf"
     if not "ref" in kwargs.keys():
         if kwargs["multiplicity"] == "1":
             kwargs["ref"] = "rhf"
@@ -52,25 +61,23 @@ def points_driver(cmd_line, **kwargs):
         # run intder. #TODO
         run_intder()
 
-    mol = Molecule(kwargs["mol_name"], kwargs["point_group"])
     for theory, options in kwargs["theories"].items():
         # TODO set all default options here, maybe make this a function? This was smart :)
         # maybe move it to where the options are set for the theories....eh
-        defaults = {"core": "ON", "rel": "OFF"}
+        # defaults = {"core": "ON", "rel": "OFF"}
         for key, val in options.items():
             kwargs[key] = val
         # for def_key, def_val in defaults.items():
         #    if def_key not in options.keys():
         #        kwargs[def_key] = def_val
 
-        atoms = kwargs["atoms"]
         with open("file07") as f:
             f = f.read()
         geoms = f.split("# GEOMUP #################\n")[1:]
         # make directory
         pathCheck(f"{theory}")
         for z, geom in enumerate(geoms):
-            i = z+1
+            i = z + 1
             # TODO rename target_sym to equil_sym or something
             target_state = select_state(geom, mol, kwargs["target_sym"])
 
@@ -106,6 +113,7 @@ def points_driver(cmd_line, **kwargs):
             # TODO some kind of handling if file already exists
             with open(f"{theory}/submit", "a") as f:
                 f.write(submit_string)
+        os.chmod(f'{theory}/submit',stat.S_IRWXU)
 
 
 def select_state(geom: str, molecule, target_sym: str):
@@ -184,8 +192,14 @@ def set_method_dictionaries(**kwargs):
         "rel": "OFF",
         "memory": "32",
         "nproc": "1",
-        "highest_root": "1",
     }
+
+    # need user input:
+    # target_sym, qfftype, molecule
+    # TODO get atom list from molecule!
+    # optional user input (meaning need defaults):
+    # charge, mult, eomtype, program, run_intder, base_method
+
     for theory, options in theories.items():
         for def_key, def_val in defaults.items():
             if def_key not in options.keys():
@@ -237,11 +251,33 @@ def format_cfour_string(**kwargs):
 
     # TODO work on state formatting
     if kwargs["eom_type"] == "CON":
-        kwargs["excite_section"] = f"%excite*\n1\n1\n{excite_guess}".format_map(kwargs)
+        kwargs["eom_type"] = "EOMEE"
+        # will just put this logic here for now cause I don't know where else it would make sense
+        # could go into the molecule class i guess
+        if kwargs["mol_name"] == "h2o":
+            con_orb = 6
+            if kwargs["target_sym"] == "b2":
+                xs_orb = 4
+            elif kwargs["target_sym"] == "b1":
+                xs_orb = 5
+        elif kwargs["mol_name"] == "co":
+            con_orb = 8
+            if kwargs["target_sym"] == "a1":
+                if kwargs["highest_root"] == "2":
+                    xs_orb = 4
+                else:
+                    xs_orb = 7
+            elif kwargs["target_sym"] == "b1":
+                xs_orb = 5
+        kwargs["excite_guess"] = f"1 {xs_orb} 0 {con_orb} 0 1.0"
+        kwargs["excite_section"] = "%excite*\n1\n1\n{excite_guess}".format_map(kwargs)
+        kwargs["continuum"] = "\nCONTINUUM=VIRTUAL"
         kwargs["roots"] = ""
     else:
+        kwargs["continuum"] = ""
         kwargs["excite_section"] = ""
         st = kwargs["highest_root"]
+        #        st = 2
         stsym = kwargs["target_state"]
         if stsym == "a1":
             st_str = f"{st}/0/0/0"
@@ -276,7 +312,7 @@ ESTATE_CONV=10
 CHARGE={charge}
 MULTIPLICITY={multiplicity}
 FROZEN_CORE={core}
-RELATIVISTIC={rel}
+RELATIVISTIC={rel}{continuum}
 REFERENCE={ref}
 EXCITE={eom_type}{roots}
 MEM_UNIT=GB,MEMORY_SIZE={memory})
@@ -293,9 +329,9 @@ MEM_UNIT=GB,MEMORY_SIZE={memory})
     return formatted_ZMAT, formatted_slurm
 
 
-def parse_cli():
-    """Parses cli arguments for cli mode"""
-    pass
+def parse_cli(**kwargs):
+    """Parses cli arguments for cli mode. This might not be necessary"""
+    return kwargs
 
 
 def run_intder():
