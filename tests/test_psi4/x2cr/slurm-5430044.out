@@ -1,0 +1,18 @@
+ 
+Running threaded PSI4 on node5 
+/home/qc//psi4conda/bin/psi4
+ 
+Working and scratch directories
+/home/mdavis/xqpgen/tests/test_psi4/x2cr
+/scratch/mdavis/PSI4_2022-11-05_10:19:30.711395415
+ 
+use -n:  to specify number of threads
+use -i:  to specify input  file     (default = input.dat)
+use -o:  to specify output file     (default = file.out )
+ 
+-h or --help for more options
+ 
+Running...
+psi4 -n 4 -i 00024.com
+...Done
+ 

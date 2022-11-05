@@ -50,6 +50,9 @@ def points_driver(cmd_line, **kwargs):
     atoms = kwargs["atoms"]
     kwargs["theories"] = set_method_dictionaries(**kwargs)
 
+    if kwargs["eom_type"] == "eomee" and kwargs["base_method"] == "cc3":
+        kwargs["program"] = "psi4"
+
     # TODO consider moving
     if not "ref" in kwargs.keys():
         if kwargs["multiplicity"] == "1":
@@ -87,10 +90,13 @@ def points_driver(cmd_line, **kwargs):
             xyz = buf.getvalue()
 
             # Do program non-agnostic parts of the driver
-            if kwargs["program"] == "PSI4":
-                # template = format_psi4()
+            if kwargs["program"] == "psi4":
+                input_file, slurm_file = format_psi4(
+                    **kwargs, target_state=target_state, xyz=xyz, theory=theory, count=i
+                )
                 file2write = f"{theory}/{i:05}.com"
                 slurm2write = f"{theory}/{i:05}.sh"
+                submit_string = f"""sbatch {i:05}.sh\n"""
             else:
                 # Run CFOUR stuff
                 file2write = f"{theory}/{i:05}/ZMAT"
@@ -113,7 +119,7 @@ def points_driver(cmd_line, **kwargs):
             # TODO some kind of handling if file already exists
             with open(f"{theory}/submit", "a") as f:
                 f.write(submit_string)
-        os.chmod(f'{theory}/submit',stat.S_IRWXU)
+        os.chmod(f"{theory}/submit", stat.S_IRWXU)
 
 
 def select_state(geom: str, molecule, target_sym: str):
@@ -154,6 +160,76 @@ def find_index(_list_of_lines, _search_string):
     return [i for i, line in enumerate(_list_of_lines) if _search_string in line][0]
 
 
+def format_psi4(**kwargs):
+    """Formats a psi4 file"""
+    # just define psi4basis for the methods honestly
+    #TODO homogenize capitalization better throughout script
+    if kwargs["core"] == "ON":
+        kwargs["core"] = "true"
+    elif kwargs["core"] == "OFF":
+        kwargs["core"] = "false"
+
+    if kwargs["eom_type"] == "eomee":
+        kwargs["method"] = "eom-" + kwargs["base_method"]
+    kwargs["psimem"] = int(kwargs["memory"]) * 1000 - 50
+
+    # TODO make this a fn that accepts the program as an input
+    st = kwargs["highest_root"]
+    stsym = kwargs["target_state"]
+    if stsym == "a1":
+        st_str = f"[{st},0,0,0]"
+    elif stsym == "b1":
+        st_str = f"[0,0,{st},0]"
+    elif stsym == "b2":
+        st_str = f"[0,0,0,{st}]"
+    elif stsym == "a2":
+        st_str = f"[0,{st},0,0]"
+    elif stsym == "a'":
+        st_str = f"[{st},0]"
+    elif stsym == "a''":
+        st_str = f"[0,{st}]"
+
+    kwargs["roots"] = f"roots_per_irrep = {st_str}"
+
+    # relativistic stuff
+    if kwargs["rel"] == "X2C1E":
+        kwargs["rel"] = "\n relativistic x2c"
+    else:
+        kwargs["rel"] = ""
+
+    psi4_template = """#{mol_name} {basis} {method}
+memory {psimem} mb
+
+molecule {mol_name}{{
+{charge} {multiplicity}
+{xyz}
+units bohr
+}}
+ 
+set globals {{
+ reference rohf
+ basis {psi4_basis}
+ freeze_core {core}
+ cachelevel=0{rel}
+ maxiter=500
+ dertype none
+ ints_tolerance 20
+ {roots}
+}}
+
+set scf d_convergence 12
+set ccenergy r_convergence 12
+set cceom r_convergence 8
+
+energy('{method}')"""
+
+    formatted_psi4 = psi4_template.format_map(kwargs)
+    kwargs["slurm_str"] = "/home/qc/bin/psi4v12.sh -n {nproc} -i {count:05}.com".format_map(kwargs)
+    formatted_slurm = slurm_template.format_map(kwargs)
+
+    return formatted_psi4, formatted_slurm
+
+
 def parse_input(_input_file):
     """Parses .inp file. Return kwargs dictionary. Might return geometry"""
     kwargs = {}
@@ -176,22 +252,29 @@ def parse_input(_input_file):
 
 
 def set_method_dictionaries(**kwargs):
+    """Main control center for adding new QFFs"""
+    # TODO object oriented logic for easy addition by end users
     theories = {
-        "dz": {"basis": "AUG-PVDZ"},
-        "tz": {"basis": "AUG-PVTZ"},
-        "qz": {"basis": "AUG-PVQZ"},
-        "5z": {"basis": "AUG-PV5Z"},
-        "pcvtz": {"basis": "AUG-PCVTZ", "core": "OFF"},
-        "pcvtz_nc": {"basis": "AUG-PCVTZ"},
-        "ccsdt_tz": {"basis": "AUG-PVTZ", "base_method": "CCSDT"},
-        "x2c": {"basis": "SPECIAL"},
-        "x2cr": {"basis": "SPECIAL", "rel": "X2C1E"},
+        "dz": {"basis": "AUG-PVDZ", "psi4_basis": "aug-cc-pvdz"},
+        "tz": {"basis": "AUG-PVTZ", "psi4_basis": "aug-cc-pvtz"},
+        "qz": {"basis": "AUG-PVQZ", "psi4_basis": "aug-cc-pvqz"},
+        "5z": {"basis": "AUG-PV5Z", "psi4_basis": "aug-cc-pv5z"},
+        "pcvtz": {"basis": "AUG-PCVTZ", "psi4_basis": "aug-cc-pcvtz", "core": "OFF"},
+        "pcvtz_nc": {"basis": "AUG-PCVTZ", "psi4_basis": "aug-cc-pcvtz"},
+        "ccsdt_tz": {
+            "basis": "AUG-PVTZ",
+            "psi4_basis": "aug-cc-pvtz",
+            "base_method": "CCSDT",
+        },
+        "x2c": {"basis": "SPECIAL", "psi4_basis": "aug-cc-pvtz-dk"},
+        "x2cr": {"basis": "SPECIAL", "psi4_basis": "aug-cc-pvtz-dk", "rel": "X2C1E"},
     }
+    # TODO saner defaults for memory
     defaults = {
         "core": "ON",
         "rel": "OFF",
         "memory": "32",
-        "nproc": "1",
+        "nproc": "4",
     }
 
     # need user input:
@@ -230,9 +313,11 @@ def set_method_dictionaries(**kwargs):
 
 
 def format_cfour_string(**kwargs):
+    # TODO change these fn names
     kwargs["base_method"] = kwargs["base_method"].upper()
     kwargs["eom_type"] = kwargs["eom_type"].upper()
     kwargs["ref"] = kwargs["ref"].upper()
+    kwargs["nproc"] = 1
 
     # default values, change to be based on theory?
     #    kwargs["nproc"] = 1
@@ -297,7 +382,8 @@ def format_cfour_string(**kwargs):
     # set x2c stuff
     buf = io.StringIO()
     for atom in kwargs["atoms"]:
-        buf.write(f"{atom}:APVTZ-X2C\n")
+        # TODO make sure this works
+        buf.write(f"{atom}:AUG-PVTZ_DK\n")
     kwargs["x2cstring"] = buf.getvalue()
 
     cfour_template = """{mol_name} {basis} {base_method}
