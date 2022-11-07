@@ -35,7 +35,7 @@ def main(
     run_intder,
     highest_root,
 ):
-    import xqpgen
+    import xqpgen.xqpgen as xqpgen
 
     xqpgen.points_driver(
         True,

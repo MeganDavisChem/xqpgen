@@ -928,4 +928,80 @@ Iter=29   L=2     Root    EOM Energy     Delta E   Res. Norm    Conv?
                      1   0.4634607256   1.20e-10    3.17e-07      N
 Iter=30   L=3     Root    EOM Energy     Delta E   Res. Norm    Conv?
                      1   0.4634607256  -1.27e-11    1.58e-07      N
-Iter=31   L=4   
+Iter=31   L=4     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4634607257   4.17e-11    8.19e-08      N
+Iter=32   L=5     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4634607257   2.59e-11    5.26e-08      N
+Iter=33   L=6     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4634607257   4.92e-13    4.71e-08      N
+Iter=34   L=7     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4634607257   7.86e-12    3.51e-08      N
+Iter=35   L=8     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4634607257  -1.21e-11    1.83e-08      N
+Iter=36   L=9     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4634607257  -2.07e-12    9.29e-09      Y
+Collapsing to only 1 vector(s).
+Change in CC3 energy from last iterated value    0.0000000002
+
+Procedure converged for 1 root(s).
+Energy written to CC_INFO:Etot  -75.4688417728
+States per irrep written to CC_INFO.
+<R|R> =   0.9999999999999998
+EOM CC3 R0 for root 0 =   0.00400040681
+
+Final Energetic Summary for Converged Roots of Irrep App
+                     Excitation Energy              Total Energy
+                (eV)     (cm^-1)     (au)             (au)
+EOM State 1     12.611   101717.9   0.4634607257   -75.468841772849
+
+Largest components of excited wave function #1:
+ RIA (libdpd indices) : (cscf notation)
+         2 >   0      :       4ap >    5ap :   -0.4928573443
+         2 >   3      :       4ap >    8ap :   -0.1738366062
+         2 >   9      :       4ap >   14ap :   -0.1361912128
+         2 >   2      :       4ap >    7ap :   -0.1266849437
+         2 >   7      :       4ap >   12ap :    0.0511406501
+ Ria (libdpd indices) : (cscf notation)
+         2 >   0      :       4ap >    5ap :    0.5833230503
+         2 >   3      :       4ap >    8ap :    0.2341959669
+         2 >   9      :       4ap >   14ap :    0.1711626565
+         2 >   2      :       4ap >    7ap :   -0.1383409172
+         2 >   7      :       4ap >   12ap :    0.0586023184
+ RIjAb (libdpd indices)     : (cscf notation)
+        0   2 >   0   0     :   1app    4ap >    5ap   1app :    0.3344677805
+        0   2 >   3   0     :   1app    4ap >    8ap   1app :    0.1180832666
+        0   2 >   0   1     :   1app    4ap >    5ap   2app :    0.0956198798
+        0   2 >   9   0     :   1app    4ap >   14ap   1app :    0.0929373547
+        0   2 >   2   0     :   1app    4ap >    7ap   1app :    0.0837889227
+ RIJAB (libdpd indices)     : (cscf notation)
+        0   2 >   5   0     :   1app    4ap >   7app    5ap :   -0.0198163630
+        0   2 >   0   0     :   1app    4ap >   2app    5ap :    0.0193630026
+        2   1 >  10   0     :    4ap    3ap >   15ap    5ap :   -0.0188435314
+        2   1 >   4   0     :    4ap    3ap >    9ap    5ap :   -0.0180870326
+        2   1 >   1   0     :    4ap    3ap >    6ap    5ap :    0.0167259602
+ Rijab (libdpd indices)     : (cscf notation)
+        2   1 >  10   0     :    4ap    3ap >   15ap    5ap :   -0.0237605993
+        2   1 >   4   0     :    4ap    3ap >    9ap    5ap :    0.0230752220
+        2   1 >   1   0     :    4ap    3ap >    6ap    5ap :    0.0202164004
+        2   1 >  20   0     :    4ap    3ap >   25ap    5ap :   -0.0133785995
+        2   0 >   9   0     :    4ap    2ap >   14ap    5ap :    0.0094859448
+
+	Putting into environment energy for root of R irrep 1 and root 1.
+	Putting into environment CURRENT ENERGY:              -75.4688417728
+
+	Total # of sigma evaluations: 73
+
+*** tstop() called on node16 at Sat Nov  5 10:34:32 2022
+Module time:
+	user time   =    2681.57 seconds =      44.69 minutes
+	system time =     160.81 seconds =       2.68 minutes
+	total time  =        711 seconds =      11.85 minutes
+Total time:
+	user time   =    3434.40 seconds =      57.24 minutes
+	system time =     217.92 seconds =       3.63 minutes
+	total time  =        918 seconds =      15.30 minutes
+
+    Psi4 stopped on: Saturday, 05 November 2022 10:34AM
+    Psi4 wall time for execution: 0:15:17.43
+
+*** Psi4 exiting successfully. Buy a developer a beer!

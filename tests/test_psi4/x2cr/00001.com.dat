@@ -906,4 +906,104 @@ Iter=19   L=10    Root    EOM Energy     Delta E   Res. Norm    Conv?
                      1   0.4673809461  -2.76e-08    3.36e-05      N
 Collapsing to 2 vector(s).
 Change in CC3 energy from last iterated value    0.0000251282
-Iter=20   L=2   
+Iter=20   L=2     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673808514  -9.47e-08    3.32e-05      N
+Iter=21   L=3     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673808843   3.29e-08    1.85e-05      N
+Iter=22   L=4     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809038   1.95e-08    1.03e-05      N
+Iter=23   L=5     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809148   1.09e-08    4.95e-06      N
+Iter=24   L=6     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809163   1.54e-09    2.34e-06      N
+Iter=25   L=7     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809154  -9.05e-10    1.38e-06      N
+Iter=26   L=8     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809137  -1.71e-09    8.32e-07      N
+Iter=27   L=9     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809141   3.99e-10    5.15e-07      N
+Iter=28   L=10    Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809145   4.28e-10    3.20e-07      N
+Collapsing to 2 vector(s).
+Change in CC3 energy from last iterated value   -0.0000000316
+Iter=29   L=2     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809146   1.19e-10    3.19e-07      N
+Iter=30   L=3     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809146  -2.19e-11    1.59e-07      N
+Iter=31   L=4     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809147   3.21e-11    8.21e-08      N
+Iter=32   L=5     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809147   2.29e-11    5.18e-08      N
+Iter=33   L=6     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809147   5.68e-14    4.64e-08      N
+Iter=34   L=7     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809147   7.49e-12    3.53e-08      N
+Iter=35   L=8     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809147  -9.41e-12    1.85e-08      N
+Iter=36   L=9     Root    EOM Energy     Delta E   Res. Norm    Conv?
+                     1   0.4673809147  -2.12e-12    9.46e-09      Y
+Collapsing to only 1 vector(s).
+Change in CC3 energy from last iterated value    0.0000000001
+
+Procedure converged for 1 root(s).
+Energy written to CC_INFO:Etot  -75.4648933343
+States per irrep written to CC_INFO.
+<R|R> =   0.9999999999999996
+EOM CC3 R0 for root 0 =   0.00392207004
+
+Final Energetic Summary for Converged Roots of Irrep App
+                     Excitation Energy              Total Energy
+                (eV)     (cm^-1)     (au)             (au)
+EOM State 1     12.718   102578.2   0.4673809147   -75.464893334275
+
+Largest components of excited wave function #1:
+ RIA (libdpd indices) : (cscf notation)
+         2 >   0      :       4ap >    5ap :    0.4923384079
+         2 >   3      :       4ap >    8ap :   -0.1749482486
+         2 >   9      :       4ap >   14ap :    0.1364738799
+         2 >   2      :       4ap >    7ap :    0.1252528439
+         2 >   7      :       4ap >   12ap :    0.0511254634
+ Ria (libdpd indices) : (cscf notation)
+         2 >   0      :       4ap >    5ap :   -0.5833025990
+         2 >   3      :       4ap >    8ap :   -0.2343862330
+         2 >   9      :       4ap >   14ap :   -0.1713194210
+         2 >   2      :       4ap >    7ap :   -0.1376330148
+         2 >   7      :       4ap >   12ap :    0.0584838898
+ RIjAb (libdpd indices)     : (cscf notation)
+        0   2 >   0   0     :   1app    4ap >    5ap   1app :   -0.3346943438
+        0   2 >   3   0     :   1app    4ap >    8ap   1app :    0.1191103971
+        0   2 >   0   1     :   1app    4ap >    5ap   2app :   -0.0953814931
+        0   2 >   9   0     :   1app    4ap >   14ap   1app :   -0.0933006495
+        0   2 >   2   0     :   1app    4ap >    7ap   1app :   -0.0829286021
+ RIJAB (libdpd indices)     : (cscf notation)
+        0   2 >   5   0     :   1app    4ap >   7app    5ap :   -0.0201146698
+        0   2 >   0   0     :   1app    4ap >   2app    5ap :    0.0193652866
+        2   1 >  10   0     :    4ap    3ap >   15ap    5ap :   -0.0189740805
+        2   1 >   4   0     :    4ap    3ap >    9ap    5ap :    0.0182213362
+        2   1 >   1   0     :    4ap    3ap >    6ap    5ap :   -0.0167610290
+ Rijab (libdpd indices)     : (cscf notation)
+        2   1 >  10   0     :    4ap    3ap >   15ap    5ap :   -0.0239270515
+        2   1 >   4   0     :    4ap    3ap >    9ap    5ap :   -0.0232452124
+        2   1 >   1   0     :    4ap    3ap >    6ap    5ap :    0.0202698666
+        2   1 >  20   0     :    4ap    3ap >   25ap    5ap :    0.0134976734
+        2   0 >   9   0     :    4ap    2ap >   14ap    5ap :   -0.0095822705
+
+	Putting into environment energy for root of R irrep 1 and root 1.
+	Putting into environment CURRENT ENERGY:              -75.4648933343
+
+	Total # of sigma evaluations: 74
+
+*** tstop() called on node2 at Sat Nov  5 10:40:53 2022
+Module time:
+	user time   =    3822.34 seconds =      63.71 minutes
+	system time =     254.71 seconds =       4.25 minutes
+	total time  =       1020 seconds =      17.00 minutes
+Total time:
+	user time   =    4811.13 seconds =      80.19 minutes
+	system time =     341.62 seconds =       5.69 minutes
+	total time  =       1294 seconds =      21.57 minutes
+
+    Psi4 stopped on: Saturday, 05 November 2022 10:40AM
+    Psi4 wall time for execution: 0:21:33.95
+
+*** Psi4 exiting successfully. Buy a developer a beer!

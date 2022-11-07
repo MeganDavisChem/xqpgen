@@ -14,3 +14,5 @@ use -o:  to specify output file     (default = file.out )
  
 Running...
 psi4 -n 4 -i 00030.com
+...Done
+ 

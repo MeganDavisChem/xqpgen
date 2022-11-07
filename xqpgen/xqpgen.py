@@ -20,6 +20,7 @@ class Molecule:
             self.point_group = "c2v"
             self.atoms = ["C", "O"]
         elif mol_name == "h2co":
+            self.point_group = "c2v"
             self.atoms = ["O", "C", "H", "H"]
         else:
             self.point_group = "c1"
@@ -145,6 +146,28 @@ def select_state(geom: str, molecule, target_sym: str):
         elif target_sym == "a1":
             # TODO
             print("pardon our progress")
+    #hardcoding h2co+
+    if molecule.mol_name == "h2co":
+        if target_sym == "b1":
+            if yo != 0 and xo != 0:
+                target_sym = "a"
+            elif yo != 0 or xo != 0:
+                target_sym = "a''"
+            else:
+                target_sym = "b1"
+        elif target_sym == "a1":
+            if yo != 0 and xo != 0:
+                target_sym = "a"
+                highest_root = "2"
+            elif yo != 0 or xo != 0:
+                target_sym = "a''"
+                highest_root = "2"
+            else:
+                target_sym = "a1"
+
+
+
+
 
     # do something to check the point group. There might even be an open source library for this
 
@@ -188,6 +211,8 @@ def format_psi4(**kwargs):
         st_str = f"[{st},0]"
     elif stsym == "a''":
         st_str = f"[0,{st}]"
+    elif stsym == "a":
+        st_str = f"[{st}]"
 
     kwargs["roots"] = f"roots_per_irrep = {st_str}"
 
@@ -354,6 +379,7 @@ def format_cfour_string(**kwargs):
                     xs_orb = 7
             elif kwargs["target_sym"] == "b1":
                 xs_orb = 5
+        #TODO hardcode h2co+ here
         kwargs["excite_guess"] = f"1 {xs_orb} 0 {con_orb} 0 1.0"
         kwargs["excite_section"] = "%excite*\n1\n1\n{excite_guess}".format_map(kwargs)
         kwargs["continuum"] = "\nCONTINUUM=VIRTUAL"
@@ -374,8 +400,14 @@ def format_cfour_string(**kwargs):
             st_str = f"0/0/0/{st}"
         elif stsym == "a'":
             st_str = f"{st}/0"
+            if kwargs['mol_name'] == "h2co":
+                st_str = f"{st}/{st}"
         elif stsym == "a''":
             st_str = f"0/{st}"
+            if kwargs['mol_name'] == "h2co":
+                st_str = f"{st}/{st}"
+        elif stsym == "a"
+            st_str = f"{st}"
 
         kwargs["roots"] = f"\nESTATE_SYM={st_str}"
 
@@ -383,7 +415,7 @@ def format_cfour_string(**kwargs):
     buf = io.StringIO()
     for atom in kwargs["atoms"]:
         # TODO make sure this works
-        buf.write(f"{atom}:AUG-PVTZ_DK\n")
+        buf.write(f"{atom}:PVTZ_DK\n")
     kwargs["x2cstring"] = buf.getvalue()
 
     cfour_template = """{mol_name} {basis} {base_method}
@@ -400,6 +432,7 @@ MULTIPLICITY={multiplicity}
 FROZEN_CORE={core}
 RELATIVISTIC={rel}{continuum}
 REFERENCE={ref}
+CC_PROG=ECC
 EXCITE={eom_type}{roots}
 MEM_UNIT=GB,MEMORY_SIZE={memory})
 
